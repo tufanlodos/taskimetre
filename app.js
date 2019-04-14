@@ -45,6 +45,6 @@ app.post("/",(req,res)=>{
 app.post("/failure",function(req,res){
   res.redirect("/"); // root un get metodu var olduğu için çalıştı.
 })
-app.listen(4000);
+app.listen(process.env.PORT || 4000);
 
 // 9a3d83f0e0b3dfd58c7a0abf46313025-us20
