@@ -1,27 +1,33 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mathDec = require('decimal.js');
+const express = require("express");
+const bodyParser = require("body-parser");
+const mathDec = require("decimal.js");
 
 const app = express();
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
-app.set('view engine','ejs');
+app.set("view engine", "ejs");
 
-let baslikDurumu="Yolculuğunuzu hesaplayın!";
+let title = "Yolculuğunuzu hesaplayın!";
 
-app.get("/",(req,res)=>{
-  res.render('index',{baslik:baslikDurumu});
+app.get("/", (req, res) => {
+  res.render("index", { title });
 });
 
-app.post("/",(req,res)=>{
-  console.log(req.body);
-  let km = req.body.km;
-  let performans = req.body.performans;
-  let yakıt = req.body.yakit;
-  let ara1 = mathDec.mul(km,performans);
-  let ara2 = mathDec.div(ara1,100);
-  let sonuc = mathDec.mul(ara2,yakıt);
-  baslikDurumu= km + " km için " + performans + " litre/100km performans ve " + yakıt + " TL yakıt fiyatıyla bu yolculuk " + sonuc.toFixed(2) + " TL olarak hesaplandı. Yeni hesap yapabilirsiniz.";
+app.post("/", (req, res) => {
+  const { km, performance, fuelCost } = req.body;
+  const result = mathDec.mul(
+    mathDec.div(mathDec.mul(km, performance), 100),
+    fuelCost
+  );
+  title =
+    km +
+    " km için " +
+    performance +
+    " litre/100km performans ve " +
+    fuelCost +
+    " TL yakıt fiyatıyla bu yolculuk " +
+    result.toFixed(2) +
+    " TL olarak hesaplandı. Yeni hesap yapabilirsiniz.";
   res.redirect("/");
 });
 
